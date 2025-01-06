@@ -36,6 +36,7 @@ albumRouter.post('/', async (req, res) => {
 
         if (!name || !artist || !releaseYear) {
             res.status(400).json({ error: "Name, artist, and release year are required" });
+            return;
         }
 
         const newAlbum = new Album({
