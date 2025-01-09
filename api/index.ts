@@ -6,6 +6,7 @@ import mongoDb from "./mongoDb";
 import albumRouter from "./routes/album/album";
 import trackRouter from "./routes/track/track";
 import userRouter from "./routes/user/user";
+import trackHistoryRouter from "./routes/trackHistory/trackHistory";
 
 const app = express();
 const port = 8000;
@@ -16,6 +17,7 @@ app.use('/artists', artistRouter);
 app.use('/albums', albumRouter);
 app.use('/tracks', trackRouter);
 app.use('/users', userRouter);
+app.use('/track_history', trackHistoryRouter);
 
 const run = async () => {
     await mongoose.connect('mongodb://localhost/musicApp');
