@@ -1,16 +1,31 @@
 import express from "express";
 import Album from "../../models/Album/Album";
+import Artist from "../../models/Artist/Artist";
+import mongoose from 'mongoose';
 
 const albumRouter = express.Router();
 
+interface Query {
+    artist?: string;
+}
+
 albumRouter.get('/', async (req, res) => {
     try {
-        const { artist } = req.query;
-        const query = artist ? { artist } : {};
+        const { artist } = req.query as Query;
+        let query: { artist?: mongoose.Types.ObjectId } = {};
+        if (artist) {
+            const artistDoc = await Artist.findOne({ name: artist });
+            if (artistDoc) {
+                query.artist = artistDoc._id;
+            } else {
+                res.status(404).json({ error: 'Artist not found' });
+                return;
+            }
+        }
         const albums = await Album.find(query).populate('artist');
-
         res.json(albums);
     } catch (error) {
+        console.error('Error fetching albums:', error);
         res.status(500).json({ error: 'Error fetching albums'});
     }
 });

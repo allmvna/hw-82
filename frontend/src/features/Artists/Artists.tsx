@@ -1,9 +1,10 @@
 import Grid from "@mui/material/Grid2";
 import {Card, CardContent, CardMedia, Typography} from "@mui/material";
 import axiosAPI from "../../axiosAPI.ts";
-import {useAppDispatch, useAppSelector } from "../../app/hooks.ts";
-import { useEffect } from "react";
-import { fetchArtists } from "./sliceArtists.tsx";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import {useEffect} from "react";
+import {fetchArtists} from "./sliceArtists.tsx";
+import {Link} from "react-router-dom";
 
 const Artists = () => {
     const { artists } = useAppSelector((state) => state.artists);
@@ -25,11 +26,13 @@ const Artists = () => {
             <Grid container spacing={2} sx={{ mt: 4 }}>
                 {artists.map((artist) => (
                     <Grid size={4} key={artist.name}>
+                        <Link to={`/albums/${artist.name}`} style={{ textDecoration: "none" }}>
                         <Card
                             sx={{
                                 minWidth: 300,
                                 border: "3px solid #ddd",
                                 borderRadius: "10px",
+                                cursor: "pointer",
                             }}
                         >
                             <CardContent
@@ -59,6 +62,8 @@ const Artists = () => {
                                 </Typography>
                             </CardContent>
                         </Card>
+                        </Link>
+
                     </Grid>
                 ))}
             </Grid>

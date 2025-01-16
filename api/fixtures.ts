@@ -37,17 +37,57 @@ const run = async () => {
         { name: 'Ed Sheeran', photo: 'fixtures/ed-sheeran.jpeg', information: 'English singer-songwriter and musician.' },
     ]);
 
-    const [album1, album2, album3] = await Album.create([
+    const [album1, album2, album3, album4, album5, album6] = await Album.create([
         { name: 'After Hours', artist: artist1._id, releaseYear: 2020, coverImage: 'fixtures/after-house.jpeg' },
+        { name: 'Starboy', artist: artist1._id, releaseYear: 2016, coverImage: 'fixtures/starboy.jpeg' },
         { name: 'Future Nostalgia', artist: artist2._id, releaseYear: 2020, coverImage: 'fixtures/future-nostalgia.jpeg' },
+        { name: 'Club Future Nostalgia', artist: artist2._id, releaseYear: 2021, coverImage: 'fixtures/club-future-nostalgia.jpeg' },
         { name: 'Divide', artist: artist3._id, releaseYear: 2017, coverImage: 'fixtures/divide.jpeg' },
+        { name: 'Multiply', artist: artist3._id, releaseYear: 2014, coverImage: 'fixtures/multiply.jpeg' },
     ]);
 
-    const [track1, track2, track3, track4] = await Track.create([
+    const [track1, track2, track3, track4, track5, track6, track7, track8, track9, track10, track11, track12, track13, track14, track15, track16, track17, track18, track19, track20] = await Track.create([
+
         { name: 'Blinding Lights', album: album1._id, duration: 200, trackNumber: 1 },
         { name: 'Save Your Tears', album: album1._id, duration: 215, trackNumber: 2 },
-        { name: 'Don’t Start Now', album: album2._id, duration: 183, trackNumber: 1 },
-        { name: 'Shape of You', album: album3._id, duration: 234, trackNumber: 1 },
+        { name: 'In Your Eyes', album: album1._id, duration: 220, trackNumber: 3 },
+        { name: 'Heartless', album: album1._id, duration: 190, trackNumber: 4 },
+        { name: 'Too Late', album: album1._id, duration: 180, trackNumber: 5 },
+
+
+        { name: 'Starboy', album: album2._id, duration: 210, trackNumber: 1 },
+        { name: 'I Feel It Coming', album: album2._id, duration: 220, trackNumber: 2 },
+        { name: 'Party Monster', album: album2._id, duration: 230, trackNumber: 3 },
+        { name: 'Reminder', album: album2._id, duration: 200, trackNumber: 4 },
+        { name: 'Rockin', album: album2._id, duration: 225, trackNumber: 5 },
+
+
+        { name: 'Don’t Start Now', album: album3._id, duration: 183, trackNumber: 1 },
+        { name: 'Physical', album: album3._id, duration: 195, trackNumber: 2 },
+        { name: 'Levitating', album: album3._id, duration: 200, trackNumber: 3 },
+        { name: 'Break My Heart', album: album3._id, duration: 210, trackNumber: 4 },
+        { name: 'Good in Bed', album: album3._id, duration: 180, trackNumber: 5 },
+
+
+        { name: 'Physical (Mark Ronson Remix)', album: album4._id, duration: 230, trackNumber: 1 },
+        { name: 'Levitating (The Blessed Madonna Remix)', album: album4._id, duration: 240, trackNumber: 2 },
+        { name: 'Hallucinate (Paul Woolford Remix)', album: album4._id, duration: 220, trackNumber: 3 },
+        { name: 'Don’t Start Now (Dominic Fike Remix)', album: album4._id, duration: 210, trackNumber: 4 },
+        { name: 'Break My Heart (Jax Jones Midnight Snack Remix)', album: album4._id, duration: 225, trackNumber: 5 },
+
+
+        { name: 'Shape of You', album: album5._id, duration: 234, trackNumber: 1 },
+        { name: 'Castle on the Hill', album: album5._id, duration: 215, trackNumber: 2 },
+        { name: 'Galway Girl', album: album5._id, duration: 205, trackNumber: 3 },
+        { name: 'Perfect', album: album5._id, duration: 210, trackNumber: 4 },
+        { name: 'Happier', album: album5._id, duration: 215, trackNumber: 5 },
+
+
+        { name: 'Sing', album: album6._id, duration: 230, trackNumber: 1 },
+        { name: 'Don’t', album: album6._id, duration: 240, trackNumber: 2 },
+        { name: 'Nina', album: album6._id, duration: 200, trackNumber: 3 },
+        { name: 'The Man', album: album6._id, duration: 225, trackNumber: 4 },
+        { name: 'Tenerife Sea', album: album6._id, duration: 215, trackNumber: 5 }
     ]);
 
     const [history1, history2, history3] = await TrackHistory.create([
