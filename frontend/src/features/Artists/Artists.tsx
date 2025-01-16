@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid2";
-import {Card, CardContent, CardMedia, Typography} from "@mui/material";
+import {Alert, Card, CardContent, CardMedia, CircularProgress, Typography} from "@mui/material";
 import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
@@ -7,13 +7,29 @@ import {fetchArtists} from "./sliceArtists.tsx";
 import {Link} from "react-router-dom";
 
 const Artists = () => {
-    const { artists } = useAppSelector((state) => state.artists);
+    const { artists, isLoading, error } = useAppSelector((state) => state.artists);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchArtists());
     }, [dispatch]);
 
+    if (isLoading) {
+        return (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                <CircularProgress />
+            </div>
+        );
+    }
+
+
+    if (error) {
+        return (
+            <Alert severity="error" style={{ marginTop: "20px", textAlign: "center" }}>
+                Error loading artists
+            </Alert>
+        );
+    }
 
     return (
         <>

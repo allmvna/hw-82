@@ -2,7 +2,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axiosAPI from "../../axiosAPI.ts";
 
 
-interface IAlbum {
+export interface IAlbum {
     name: string;
     artist: string;
     coverImage: string | null;
@@ -27,7 +27,6 @@ export const fetchAlbums = createAsyncThunk(
     async (artistName: string) => {
         try {
             const response = await axiosAPI.get(`/albums?artist=${artistName}`);
-            console.log('Albums fetched:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error fetching albums:', error);

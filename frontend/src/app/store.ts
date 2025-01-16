@@ -1,11 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import {artistsReducer} from "../features/Artists/sliceArtists.tsx";
 import {albumsReducer} from "../features/Albums/sliceAlbums.tsx";
+import {tracksReducer} from "../features/Tracks/sliceTracks.tsx";
 
 export const store = configureStore({
   reducer: {
     artists: artistsReducer,
     albums: albumsReducer,
+    tracks: tracksReducer
   },
 });
 

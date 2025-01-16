@@ -1,15 +1,35 @@
 import express from "express";
 import Track from "../../models/Track/Track";
+import Album from "../../models/Album/Album";
 
 const trackRouter = express.Router();
 
 trackRouter.get('/', async (req, res) => {
-    const { album } = req.query;
-    const query = album ? { album } : {};
-    const tracks = await Track.find(query).populate('album');
-    res.json(tracks);
-});
+    try {
+        const { album } = req.query as { album?: string };
 
+        if (album) {
+            const albumDoc = await Album.findOne({ name: album });
+
+            if (!albumDoc) {
+                res.status(404).json({ error: 'Album not found' });
+            return;
+            }
+
+            const tracks = await Track.find({ album: albumDoc._id }).populate('album');
+            res.json(tracks);
+            return;
+        }
+
+        const tracks = await Track.find().populate('album');
+        res.json(tracks);
+        return;
+
+    } catch (error) {
+        console.error('Error fetching tracks:', error);
+        res.status(500).json({ error: 'Error fetching tracks' });
+    }
+});
 
 trackRouter.post('/', async (req, res) => {
     const { name, album, duration, trackNumber } = req.body;
