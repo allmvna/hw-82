@@ -12,16 +12,17 @@ trackRouter.get('/', async (req, res) => {
 
 
 trackRouter.post('/', async (req, res) => {
-    const { name, album, duration } = req.body;
+    const { name, album, duration, trackNumber } = req.body;
 
-    if (!name || !album) {
-        res.status(400).json({ error: "Name and album are required" });
+    if (!name || !album || !trackNumber) {
+        res.status(400).json({ error: "Name, album and trackNumber are required" });
     }
 
     const newTrack = new Track({
         name,
         album,
-        duration
+        duration,
+        trackNumber
     });
     await newTrack.save();
     res.status(201).json(newTrack);
