@@ -32,15 +32,15 @@ const run = async () => {
     ]);
 
     const [artist1, artist2, artist3] = await Artist.create([
-        { name: 'The Weeknd', photo: 'fixtures/the-weeknd.jpg', information: 'Canadian singer, songwriter, and record producer.' },
-        { name: 'Dua Lipa', photo: 'fixtures/dua-lipa.jpg', information: 'British-Albanian pop singer.' },
-        { name: 'Ed Sheeran', photo: 'fixtures/ed-sheeran.jpg', information: 'English singer-songwriter and musician.' },
+        { name: 'The Weeknd', photo: 'fixtures/the-weeknd.jpeg', information: 'Canadian singer, songwriter, and record producer.' },
+        { name: 'Dua Lipa', photo: 'fixtures/dua-lipa.jpeg', information: 'British-Albanian pop singer.' },
+        { name: 'Ed Sheeran', photo: 'fixtures/ed-sheeran.jpeg', information: 'English singer-songwriter and musician.' },
     ]);
 
     const [album1, album2, album3] = await Album.create([
-        { name: 'After Hours', artist: artist1._id, releaseYear: 2020, coverImage: 'fixtures/after-house.jpg' },
-        { name: 'Future Nostalgia', artist: artist2._id, releaseYear: 2020, coverImage: 'fixtures/future-nostalgia.jpg' },
-        { name: 'Divide', artist: artist3._id, releaseYear: 2017, coverImage: 'fixtures/divide.jpg' },
+        { name: 'After Hours', artist: artist1._id, releaseYear: 2020, coverImage: 'fixtures/after-house.jpeg' },
+        { name: 'Future Nostalgia', artist: artist2._id, releaseYear: 2020, coverImage: 'fixtures/future-nostalgia.jpeg' },
+        { name: 'Divide', artist: artist3._id, releaseYear: 2017, coverImage: 'fixtures/divide.jpeg' },
     ]);
 
     const [track1, track2, track3, track4] = await Track.create([
