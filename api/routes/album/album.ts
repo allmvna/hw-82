@@ -22,7 +22,10 @@ albumRouter.get('/', async (req, res) => {
                 return;
             }
         }
-        const albums = await Album.find(query).populate('artist');
+        const albums = await Album.find(query)
+            .populate('artist')
+            .sort({ year: -1 });
+
         res.json(albums);
     } catch (error) {
         console.error('Error fetching albums:', error);

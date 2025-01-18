@@ -16,12 +16,18 @@ trackRouter.get('/', async (req, res) => {
             return;
             }
 
-            const tracks = await Track.find({ album: albumDoc._id }).populate('album');
+            const tracks = await Track.find({ album: albumDoc._id })
+                .populate('album')
+                .sort({ trackNumber: 1 });
+
             res.json(tracks);
             return;
         }
 
-        const tracks = await Track.find().populate('album');
+        const tracks = await Track.find()
+            .populate('album')
+            .sort({ trackNumber: 1 });
+
         res.json(tracks);
         return;
 

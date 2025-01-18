@@ -35,7 +35,7 @@ const Artists = () => {
         <>
             <Typography
                 variant="h4"
-                sx={{ mb: 2, textAlign: "center", color: "#000" }}
+                sx={{ mb: 2, textAlign: "center", color: "white", fontWeight: 'bold' }}
             >
                 Artists
             </Typography>
@@ -46,15 +46,20 @@ const Artists = () => {
                         <Card
                             sx={{
                                 minWidth: 300,
-                                border: "3px solid #ddd",
                                 borderRadius: "10px",
                                 cursor: "pointer",
+                                '&:hover': {
+                                    transform: "scale(1.05)",
+                                    transition: "all 0.3s ease",
+                                },
+                                transition: "all 0.3s ease",
                             }}
                         >
                             <CardContent
                                 sx={{
                                     display: "flex",
                                     flexDirection: "column",
+                                    textAlign: "center",
                                     alignItems: "center",
                                 }}
                             >
@@ -64,15 +69,16 @@ const Artists = () => {
                                         src={`${axiosAPI.defaults.baseURL}/${artist.photo}`}
                                         title={artist.name}
                                         sx={{
-                                            borderRadius: "8px",
-                                            width: "300px",
-                                            height: "400px",
-                                            mb: 2
+                                            borderRadius: "10px",
+                                            width: "100%",
+                                            height: "500px",
+                                            objectFit: "cover",
+                                            mb: 2,
                                         }}
                                     />
                                 )}
                                 <Typography
-                                    sx={{ fontSize: 25, fontWeight: "bold", flexGrow: 1 }}
+                                    sx={{ fontSize: 25, fontWeight: "bold", flexGrow: 1, color: 'grey' }}
                                 >
                                     {artist.name}
                                 </Typography>

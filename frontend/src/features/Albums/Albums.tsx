@@ -37,14 +37,25 @@ const Albums = () => {
 
     return (
         <>
-            <Typography variant="h4" sx={{ mb: 2, textAlign: "center", color: "#000" }}>
+            <Typography variant="h4" sx={{ mb: 2, textAlign: "center", color: "white", fontWeight: 'bold' }}>
                 Albums of {artistName}
             </Typography>
             <Grid container spacing={2} sx={{ mt: 4 }}>
                 {albums.map((album) => (
                     <Grid size={4} key={album.name}>
                         <Link to={`/albums/${album.name}/tracks`} style={{ textDecoration: "none" }}>
-                        <Card sx={{ minWidth: 300, border: "3px solid #ddd", borderRadius: "10px" }}>
+                        <Card
+                            sx={{
+                                minWidth: 300,
+                                borderRadius: "10px",
+                                cursor: "pointer",
+                                '&:hover': {
+                                    transform: "scale(1.05)",
+                                    transition: "all 0.3s ease",
+                                },
+                                transition: "all 0.3s ease",
+                            }}
+                        >
                             <CardContent
                                 sx={{
                                     display: "flex",
@@ -59,8 +70,9 @@ const Albums = () => {
                                         title={album.name}
                                         sx={{
                                             borderRadius: "8px",
-                                            width: "300px",
-                                            height: "400px",
+                                            width: "100%",
+                                            height: "500px",
+                                            objectFit: "cover",
                                             mb: 2,
                                         }}
                                     />

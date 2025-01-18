@@ -8,15 +8,15 @@ const Navbar = () => {
           position="static"
           sx={{
             padding: "10px",
-            borderBottom: "1px solid",
-              backgroundColor: "#000000",
+              border: 'none',
+              background: "linear-gradient(to top, #003366, #000000)"
           }}
         >
           <Toolbar>
             <Container>
               <Typography
                 variant="h5"
-                sx={{color: "#ffff", textTransform: 'uppercase', textAlign: 'center' }}
+                sx={{color: "#ffff", textTransform: 'uppercase'}}
               >
                  Music App
               </Typography>

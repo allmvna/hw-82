@@ -3,6 +3,7 @@ import axiosAPI from "../../axiosAPI.ts";
 
 
 export interface IAlbum {
+    _id: string,
     name: string;
     artist: string;
     coverImage: string | null;
