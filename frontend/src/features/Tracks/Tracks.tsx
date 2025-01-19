@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useEffect } from "react";
-import {fetchAlbumDetails, fetchTracks } from "./sliceTracks";
+import {fetchAlbumDetails, fetchTracks } from "./sliceTracks.ts";
 import {
     Card,
     CardContent,

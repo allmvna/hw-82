@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid2";
 import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
-import {fetchAlbums} from "./sliceAlbums.tsx";
+import {fetchAlbums} from "./sliceAlbums.ts";
 import {Link, useParams} from "react-router-dom";
 
 

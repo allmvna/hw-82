@@ -1,13 +1,15 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {artistsReducer} from "../features/Artists/sliceArtists.tsx";
-import {albumsReducer} from "../features/Albums/sliceAlbums.tsx";
-import {tracksReducer} from "../features/Tracks/sliceTracks.tsx";
+import {artistsReducer} from "../features/Artists/sliceArtists.ts";
+import {albumsReducer} from "../features/Albums/sliceAlbums.ts";
+import {tracksReducer} from "../features/Tracks/sliceTracks.ts";
+import {registerReducer} from "../features/Users/sliceRegister.ts";
 
 export const store = configureStore({
   reducer: {
     artists: artistsReducer,
     albums: albumsReducer,
-    tracks: tracksReducer
+    tracks: tracksReducer,
+    users: registerReducer,
   },
 });
 

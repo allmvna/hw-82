@@ -14,7 +14,8 @@ userRouter.post("/", async (req, res, next) => {
 
         user.generateToken();
         await user.save();
-        res.send(user);
+
+        res.send({user, message: "Registered successfully!"});
     } catch (error){
       if(error instanceof Error.ValidationError){
           res.status(400).send(error);

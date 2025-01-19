@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axiosAPI from "../../axiosAPI.ts";
-import {IAlbum} from "../Albums/sliceAlbums.tsx";
+import {IAlbum} from "../Albums/sliceAlbums.ts";
 
 
 interface ITrack {
