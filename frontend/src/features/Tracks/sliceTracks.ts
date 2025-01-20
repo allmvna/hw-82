@@ -3,7 +3,8 @@ import axiosAPI from "../../axiosAPI.ts";
 import {IAlbum} from "../Albums/sliceAlbums.ts";
 
 
-interface ITrack {
+export interface ITrack {
+    id: number;
     name: string;
     duration: string;
     trackNumber: number;
