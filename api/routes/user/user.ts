@@ -2,30 +2,28 @@ import express from "express";
 import {Error} from 'mongoose';
 import User from "../../models/User/User";
 
+const usersRouter = express.Router();
 
-const userRouter = express.Router();
-
-userRouter.post("/", async (req, res, next) => {
+usersRouter.post("/", async (req, res, next) => {
     try {
         const user = new User({
             username: req.body.username,
-            password: req.body.password,
+            password: req.body.password
         });
 
         user.generateToken();
         await user.save();
-
-        res.send({user, message: "Registered successfully!"});
+        res.send(user);
     } catch (error){
-      if(error instanceof Error.ValidationError){
-          res.status(400).send(error);
-          return;
-      }
+        if(error instanceof Error.ValidationError){
+            res.status(400).send(error);
+            return;
+        }
         next(error);
     }
 });
 
-userRouter.post('/sessions', async (req, res, next) => {
+usersRouter.post('/sessions', async (req, res, next) => {
     try{
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -57,4 +55,32 @@ userRouter.post('/sessions', async (req, res, next) => {
 });
 
 
-export default userRouter;
+usersRouter.delete('/sessions', async (req, res, next) => {
+    try {
+        const token = req.get('Authorization');
+
+        const success = {message: 'Success'};
+
+        if (!token) {
+            res.send(success);
+            return;
+        }
+
+        const user = await User.findOne({token});
+
+        if (!user){
+            res.send(success)
+            return;
+        }
+
+        user.generateToken();
+        await user.save();
+        res.send(success);
+        return;
+    } catch (e) {
+        return next(e);
+    }
+});
+
+
+export default usersRouter;

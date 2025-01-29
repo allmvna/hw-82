@@ -10,8 +10,6 @@ interface UserMethods {
 
 type UserModel = Model<UserFields, {}, UserMethods>;
 
-const Schema = mongoose.Schema;
-
 const SALT_WORK_FACTOR = 10;
 
 const userSchema = new mongoose.Schema<HydratedDocument<UserFields>, UserModel, UserMethods>({
