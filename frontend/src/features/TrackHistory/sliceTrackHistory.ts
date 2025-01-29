@@ -1,23 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosAPI from "../../axiosAPI.ts";
-import {ITrack} from "./sliceTracks.ts";
-import {User} from "../../types";
-import {RootState} from "../../app/store.ts";
+import { RootState } from "../../app/store.ts";
+import {ITrack} from "../Tracks/sliceTracks.ts";
 
 interface TrackHistoryItem {
     track: ITrack,
-    user: User,
-    datetime: string,
+    datetime: string;
 }
 
 interface TrackHistoryState {
-    history: TrackHistoryItem[];
+    trackHistory: TrackHistoryItem[];
     isLoading: boolean;
     error: boolean;
 }
 
 const initialState: TrackHistoryState = {
-    history: [],
+    trackHistory: [],
     isLoading: false,
     error: false,
 };
@@ -33,7 +31,6 @@ export const addTrackToHistory = createAsyncThunk<
         if (!token) {
             throw new Error("User token is missing");
         }
-
         const response = await axiosAPI.post<TrackHistoryItem>(
             '/track_history',
             { track },
@@ -42,8 +39,6 @@ export const addTrackToHistory = createAsyncThunk<
         return response.data;
     }
 );
-
-
 
 const sliceTrackHistory = createSlice({
     name: 'trackHistory',
@@ -57,7 +52,7 @@ const sliceTrackHistory = createSlice({
             })
             .addCase(addTrackToHistory.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.history.push(action.payload);
+                state.trackHistory.push(action.payload);
             })
             .addCase(addTrackToHistory.rejected, (state) => {
                 state.isLoading = false;

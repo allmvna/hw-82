@@ -4,7 +4,7 @@ import {IAlbum} from "../Albums/sliceAlbums.ts";
 
 
 export interface ITrack {
-    id: number;
+    trackId: string;
     name: string;
     duration: string;
     trackNumber: number;

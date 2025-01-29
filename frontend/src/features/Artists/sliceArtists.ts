@@ -2,7 +2,8 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axiosAPI from "../../axiosAPI.ts";
 
 
-interface IArtist {
+export interface IArtist {
+    _id: string;
     name: string;
     photo: string;
     information: string

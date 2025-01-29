@@ -32,9 +32,9 @@ const run = async () => {
     ]);
 
     const [artist1, artist2, artist3] = await Artist.create([
-        { name: 'The Weeknd', photo: 'fixtures/the-weeknd.jpeg', information: 'Canadian singer, songwriter, and record producer.' },
-        { name: 'Dua Lipa', photo: 'fixtures/dua-lipa.jpeg', information: 'British-Albanian pop singer.' },
-        { name: 'Ed Sheeran', photo: 'fixtures/ed-sheeran.jpeg', information: 'English singer-songwriter and musician.' },
+        { name: 'The Weeknd', photo: 'fixtures/weeknd.jpg', information: 'Canadian singer, songwriter, and record producer.' },
+        { name: 'Dua Lipa', photo: 'fixtures/dualipa.jpg', information: 'British-Albanian pop singer.' },
+        { name: 'Ed Sheeran', photo: 'fixtures/edsheeran.webp', information: 'English singer-songwriter and musician.' },
     ]);
 
     const [album1, album2, album3, album4, album5, album6] = await Album.create([
