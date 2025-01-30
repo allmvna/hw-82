@@ -28,9 +28,9 @@ albumRouter.get('/', async (req, res) => {
             .populate('artist')
             .sort({ year: -1 });
 
+
         res.json(albums);
     } catch (error) {
-        console.error('Error fetching albums:', error);
         res.status(500).json({ error: 'Error fetching albums'});
     }
 });
@@ -50,7 +50,7 @@ albumRouter.get('/:id', async (req, res) => {
     }
 });
 
-albumRouter.post('/', auth, async (req, res) => {
+albumRouter.post('/new_album', auth, async (req, res) => {
     const expressReq = req as RequestWithUser;
     const user = expressReq.user;
 
@@ -119,9 +119,8 @@ albumRouter.patch('/albums/:id/togglePublished', auth, permit('admin'), async (r
         album.isPublished = !album.isPublished;
         await album.save();
 
-        res.status(200).json({ message: `Album ${album.isPublished ? 'published' : 'unpublished'}`, album });
+        res.status(200).json({ message: `Album ${album.isPublished ? 'true' : 'false'}`, album });
     } catch (error) {
-        console.error('Error toggling album publication:', error);
         res.status(500).json({ error: 'Error toggling album publication' });
     }
 });

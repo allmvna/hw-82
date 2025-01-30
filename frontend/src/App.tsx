@@ -7,8 +7,16 @@ import TrackHistory from "./features/TrackHistory/TrackHistory.tsx";
 import AppToolbar from "./components/AppToolbar/AppToolbar.tsx";
 import RegisterPage from "./features/users/RegisterPage.tsx";
 import LoginPage from "./features/users/LoginPage.tsx";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
+import {useAppSelector} from "./app/hooks.ts";
+import {selectUser} from "./features/users/userSlice.ts";
+import AlbumForm from "./features/Albums/component/AlbumForm.tsx";
+import ArtistForm from "./features/Artists/component/ArtistForm.tsx";
+import TrackForm from "./features/Tracks/component/TrackForm.tsx";
 
 const App = () => {
+    const user = useAppSelector(selectUser);
+
   return (
       <>
           <header>
@@ -21,9 +29,16 @@ const App = () => {
                       <Route path="/register" element={<RegisterPage />} />
                       <Route path="/login" element={<LoginPage />} />
                       <Route path="/artists" element={<Artists/>}/>
+                      <Route path="/new_album" element={<AlbumForm/>}/>
+                      <Route path="/new_track" element={<TrackForm/>}/>
+                      <Route path="/new_artist" element={<ArtistForm/>}/>
                       <Route path="/albums/:artistName" element={<Albums />} />
                       <Route path="/albums/:albumName/tracks" element={<Tracks />} />
-                      <Route path="/track_history" element={<TrackHistory/>}/>
+                      <Route path="/track_history" element={(
+                          <ProtectedRoute isAllowed={user && user.role === 'user'}>
+                              <TrackHistory/>
+                          </ProtectedRoute>
+                      )}/>
                       <Route path="*" element={<Alert severity="error">Page not found</Alert>}/>
                   </Routes>
               </Container>

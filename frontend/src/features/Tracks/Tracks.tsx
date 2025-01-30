@@ -1,11 +1,11 @@
 import {useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {useEffect} from "react";
-import {fetchAlbumDetails, fetchTracks} from "./sliceTracks.ts";
 import {Alert, Button, Card, CardContent, CircularProgress, Typography,} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import {selectUser} from "../users/userSlice.ts";
 import {addTrackToHistory} from "../TrackHistory/thunkTrackHistory.ts";
+import {fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
 
 const Tracks = () => {
     const { albumName } = useParams<{ albumName: string }>();
@@ -23,7 +23,7 @@ const Tracks = () => {
 
     const handleClick = (trackId: string) => {
         if (!user?.token) {
-            alert("Вы не авторизованы!");
+            alert("You are not logged in!");
             return;
         }
 

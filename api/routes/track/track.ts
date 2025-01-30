@@ -39,7 +39,7 @@ trackRouter.get('/', async (req, res) => {
     }
 });
 
-trackRouter.post('/', auth, async (req, res) => {
+trackRouter.post('/new_track', auth, async (req, res) => {
     const expressReq = req as RequestWithUser;
     const user = expressReq.user;
 
@@ -52,16 +52,22 @@ trackRouter.post('/', auth, async (req, res) => {
 
     if (!name || !album || !trackNumber) {
         res.status(400).json({ error: "Name, album and trackNumber are required" });
+        return;
     }
 
-    const newTrack = new Track({
-        name,
-        album,
-        duration,
-        trackNumber
-    });
-    await newTrack.save();
-    res.status(201).json(newTrack);
+    try{
+
+        const newTrack = new Track({
+            name,
+            album,
+            duration,
+            trackNumber
+        });
+        await newTrack.save();
+        res.status(201).json(newTrack);
+    } catch (e) {
+        res.status(500).json({ error: 'Error creating track' });
+    }
 });
 
 trackRouter.delete('/:id', auth, permit('admin'), async (req, res) => {

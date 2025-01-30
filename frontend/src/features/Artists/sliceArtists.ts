@@ -1,5 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axiosAPI from "../../axiosAPI.ts";
+import {createSlice} from "@reduxjs/toolkit";
+import {createArtist, fetchArtists} from "./thunkArtists.ts";
+import {RootState} from "../../app/store.ts";
 
 
 export interface IArtist {
@@ -21,13 +22,8 @@ const initialState: ArtistState = {
     error: false,
 };
 
-export const fetchArtists = createAsyncThunk(
-    'artists/fetchArtists',
-    async () => {
-        const response = await axiosAPI.get('/artists');
-        return response.data;
-    }
-);
+export const selectArtist = (state: RootState) =>
+    state.artists.isLoading;
 
 export const sliceArtists = createSlice({
     name: "artist",
@@ -44,6 +40,18 @@ export const sliceArtists = createSlice({
                 state.artists = action.payload;
             })
             .addCase(fetchArtists.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(createArtist.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(createArtist.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.artists.push(action.payload);
+            })
+            .addCase(createArtist.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

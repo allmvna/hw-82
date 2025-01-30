@@ -3,8 +3,8 @@ import {Alert, Card, CardContent, CardMedia, CircularProgress, Typography} from 
 import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
-import {fetchArtists} from "./sliceArtists.ts";
 import {Link} from "react-router-dom";
+import {fetchArtists} from "./thunkArtists.ts";
 
 const Artists = () => {
     const { artists, isLoading, error } = useAppSelector((state) => state.artists);

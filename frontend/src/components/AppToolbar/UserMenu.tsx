@@ -62,6 +62,75 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         >
             Track History
         </Button>
+      {user && (
+        <Button
+            sx={{
+                fontWeight: "bold",
+                color: "#2196f3",
+                border: "2px solid #2196f3",
+                borderRadius: "10px",
+                textTransform: "uppercase",
+                margin: "0 8px",
+                padding: "6px 24px",
+                transition: "all 0.3s",
+                "&:hover": {
+                    backgroundColor: "#2196f3",
+                    color: "#fff",
+                },
+            }}
+            component={NavLink}
+            to="/new_album"
+            color="inherit"
+        >
+           New album
+        </Button>
+      )}
+        {user && (
+            <Button
+                sx={{
+                    fontWeight: "bold",
+                    color: "#2196f3",
+                    border: "2px solid #2196f3",
+                    borderRadius: "10px",
+                    textTransform: "uppercase",
+                    margin: "0 8px",
+                    padding: "6px 24px",
+                    transition: "all 0.3s",
+                    "&:hover": {
+                        backgroundColor: "#2196f3",
+                        color: "#fff",
+                    },
+                }}
+                component={NavLink}
+                to="/new_artist"
+                color="inherit"
+            >
+                New artist
+            </Button>
+        )}
+        {user && (
+            <Button
+                sx={{
+                    fontWeight: "bold",
+                    color: "#2196f3",
+                    border: "2px solid #2196f3",
+                    borderRadius: "10px",
+                    textTransform: "uppercase",
+                    margin: "0 8px",
+                    padding: "6px 24px",
+                    transition: "all 0.3s",
+                    "&:hover": {
+                        backgroundColor: "#2196f3",
+                        color: "#fff",
+                    },
+                }}
+                component={NavLink}
+                to="/new_track"
+                color="inherit"
+            >
+                New track
+            </Button>
+        )}
       <Menu
         anchorEl={anchorEl}
         keepMounted

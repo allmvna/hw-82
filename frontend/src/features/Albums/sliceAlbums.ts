@@ -1,5 +1,6 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axiosAPI from "../../axiosAPI.ts";
+import {createSlice} from "@reduxjs/toolkit";
+import {createAlbum, fetchAlbums} from "./thunkAlbums.ts";
+import {RootState} from "../../app/store.ts";
 
 
 export interface IAlbum {
@@ -22,19 +23,9 @@ const initialState: AlbumsState = {
     error: false,
 };
 
+export const selectLoadingAlbum = (state: RootState) =>
+    state.albums.isLoading;
 
-export const fetchAlbums = createAsyncThunk(
-    'albums/fetchAlbums',
-    async (artistName: string) => {
-        try {
-            const response = await axiosAPI.get(`/albums?artist=${artistName}`);
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching albums:', error);
-            throw error;
-        }
-    }
-);
 
 export const sliceAlbums = createSlice({
     name: "album",
@@ -51,6 +42,18 @@ export const sliceAlbums = createSlice({
                 state.albums = action.payload;
             })
             .addCase(fetchAlbums.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(createAlbum.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(createAlbum.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.albums.push(action.payload);
+            })
+            .addCase(createAlbum.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });
