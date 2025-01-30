@@ -2,6 +2,8 @@ import express from "express";
 import Album from "../../models/Album/Album";
 import Artist from "../../models/Artist/Artist";
 import mongoose from 'mongoose';
+import auth, {RequestWithUser} from "../../middleware/auth";
+import permit from "../../middleware/permit";
 
 const albumRouter = express.Router();
 
@@ -48,7 +50,15 @@ albumRouter.get('/:id', async (req, res) => {
     }
 });
 
-albumRouter.post('/', async (req, res) => {
+albumRouter.post('/', auth, async (req, res) => {
+    const expressReq = req as RequestWithUser;
+    const user = expressReq.user;
+
+    if (!user) {
+        res.status(401).json({ error: 'User not authenticated' });
+        return;
+    }
+
     try {
         const { name, artist, releaseYear, coverImage } = req.body;
 
@@ -68,6 +78,51 @@ albumRouter.post('/', async (req, res) => {
         res.status(201).json(newAlbum);
     } catch (error) {
         res.status(500).json({ error: 'Error creating album' });
+    }
+});
+
+albumRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+    const expressReq = req as RequestWithUser;
+    const user = expressReq.user;
+
+    if (!user) {
+        res.status(401).json({ error: 'User not authenticated' });
+        return;
+    }
+
+    try {
+        const albumId = req.params.id;
+
+        const album = await Album.findByIdAndDelete(albumId);
+
+        if (!album) {
+            res.status(404).json({ error: 'Album not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Album deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting album' });
+    }
+});
+
+albumRouter.patch('/albums/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+    try {
+        const albumId = req.params.id;
+        const album = await Album.findById(albumId);
+
+        if (!album) {
+            res.status(404).json({ error: 'Album not found' });
+            return;
+        }
+
+        album.isPublished = !album.isPublished;
+        await album.save();
+
+        res.status(200).json({ message: `Album ${album.isPublished ? 'published' : 'unpublished'}`, album });
+    } catch (error) {
+        console.error('Error toggling album publication:', error);
+        res.status(500).json({ error: 'Error toggling album publication' });
     }
 });
 
