@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {IAlbum} from "../../types";
 
 const Schema = mongoose.Schema;
 
@@ -22,5 +23,5 @@ const albumSchema = new mongoose.Schema({
     },
 });
 
-const Album = mongoose.model('Album', albumSchema);
+const Album = mongoose.model<IAlbum>('Album', albumSchema);
 export default Album;

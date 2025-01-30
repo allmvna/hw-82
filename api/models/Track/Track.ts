@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {ITrack} from "../../types";
 
 const Schema = mongoose.Schema;
 
@@ -21,5 +22,5 @@ const trackSchema = new mongoose.Schema({
     },
 });
 
-const Track = mongoose.model('Track', trackSchema);
+const Track = mongoose.model<ITrack>('Track', trackSchema);
 export default Track;
