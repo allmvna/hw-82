@@ -35,7 +35,7 @@ const Artists = () => {
         <>
             <Typography
                 variant="h4"
-                sx={{ mb: 2, textAlign: "center", color: "white", fontWeight: 'bold' }}
+                sx={{ mb: 2, textAlign: "center", fontWeight: 'bold', mt: 3 }}
             >
                 Artists
             </Typography>

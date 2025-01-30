@@ -37,7 +37,7 @@ const Albums = () => {
 
     return (
         <>
-            <Typography variant="h4" sx={{ mb: 2, textAlign: "center", color: "white", fontWeight: 'bold' }}>
+            <Typography variant="h5" sx={{ mb: 2, textAlign: "center", fontWeight: 'bold', mt: 3 }}>
                 Albums of {artistName}
             </Typography>
             <Grid container spacing={2} sx={{ mt: 4 }}>

@@ -1,3 +1,5 @@
+import {ITrack} from "./features/Tracks/sliceTracks.ts";
+
 export interface UserFields {
     _id: string;
     username: string;
@@ -34,4 +36,31 @@ export interface ValidationError {
 export interface GlobalError {
     error: string;
 }
+
+export interface TrackHistoryItem {
+    _id: string;
+    track: ITrack,
+    trackName: string;
+    artistName: string;
+    dateListened: string;
+}
+
+export interface IArtist {
+    name: string;
+}
+
+export interface IAlbum {
+    name: string;
+    artist: IArtist;
+    releaseYear: number;
+    coverImage: string | null;
+}
+
+export interface ITrack {
+    name: string;
+    album: IAlbum;
+    duration: string;
+    trackNumber: number;
+}
+
 
