@@ -20,6 +20,7 @@ app.use('/albums', albumRouter);
 app.use('/tracks', trackRouter);
 app.use('/users', userRouter);
 app.use('/track_history', trackHistoryRouter);
+app.use(express.static('public'));
 app.use('/fixtures', express.static(path.join(__dirname, 'fixtures')));
 
 const run = async () => {

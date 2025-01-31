@@ -5,11 +5,14 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import {fetchAlbums} from "./thunkAlbums.ts";
+import {selectAlbumByArtist, selectErrorAlbum, selectLoadingAlbum} from "./sliceAlbums.ts";
 
 
 const Albums = () => {
     const { artistName } = useParams();
-    const { albums,isLoading, error } = useAppSelector((state) => state.albums);
+    const albums = useAppSelector(selectAlbumByArtist);
+    const error = useAppSelector(selectErrorAlbum);
+    const loading = useAppSelector(selectLoadingAlbum);
     const dispatch = useAppDispatch();
 
 
@@ -19,7 +22,8 @@ const Albums = () => {
         }
     }, [artistName, dispatch]);
 
-    if (isLoading) {
+
+    if (loading) {
         return (
             <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <CircularProgress />
@@ -31,6 +35,15 @@ const Albums = () => {
         return (
             <Alert severity="error" style={{ marginTop: "20px", textAlign: "center" }}>
                 Error loading albums
+            </Alert>
+        );
+    }
+
+
+    if (!loading && !error && albums.length === 0) {
+        return (
+            <Alert severity="info" sx={{ textAlign: "center", mt: 4 }}>
+                No albums found for {artistName}.
             </Alert>
         );
     }

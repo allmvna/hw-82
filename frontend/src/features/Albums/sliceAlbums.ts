@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createAlbum, fetchAlbums} from "./thunkAlbums.ts";
+import {createAlbum, fetchAlbums, fetchAllAlbums} from "./thunkAlbums.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -23,8 +23,12 @@ const initialState: AlbumsState = {
     error: false,
 };
 
+export const selectAlbumByArtist = (state: RootState) => state.albums.albums;
+export const selectALlAlbums = (state: RootState) => state.albums.albums;
 export const selectLoadingAlbum = (state: RootState) =>
     state.albums.isLoading;
+export const selectErrorAlbum = (state: RootState) =>
+    state.albums.error;
 
 
 export const sliceAlbums = createSlice({
@@ -42,6 +46,18 @@ export const sliceAlbums = createSlice({
                 state.albums = action.payload;
             })
             .addCase(fetchAlbums.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(fetchAllAlbums.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(fetchAllAlbums.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.albums = action.payload;
+            })
+            .addCase(fetchAllAlbums.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             })

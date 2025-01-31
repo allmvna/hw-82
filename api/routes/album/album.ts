@@ -4,6 +4,7 @@ import Artist from "../../models/Artist/Artist";
 import mongoose from 'mongoose';
 import auth, {RequestWithUser} from "../../middleware/auth";
 import permit from "../../middleware/permit";
+import {imagesUpload} from "../../multer";
 
 const albumRouter = express.Router();
 
@@ -50,7 +51,7 @@ albumRouter.get('/:id', async (req, res) => {
     }
 });
 
-albumRouter.post('/new_album', auth, async (req, res) => {
+albumRouter.post('/new_album', auth, imagesUpload.single('coverImage'), async (req, res) => {
     const expressReq = req as RequestWithUser;
     const user = expressReq.user;
 
@@ -60,7 +61,7 @@ albumRouter.post('/new_album', auth, async (req, res) => {
     }
 
     try {
-        const { name, artist, releaseYear, coverImage } = req.body;
+        const { name, artist, releaseYear } = req.body;
 
         if (!name || !artist || !releaseYear) {
             res.status(400).json({ error: "Name, artist, and release year are required" });
@@ -71,7 +72,7 @@ albumRouter.post('/new_album', auth, async (req, res) => {
             name,
             artist,
             releaseYear,
-            coverImage
+            coverImage: req.file ? '/images' + req.file.filename : null,
         });
         await newAlbum.save();
 

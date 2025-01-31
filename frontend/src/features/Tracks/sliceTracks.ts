@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {createTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {RootState} from "../../app/store.ts";
 
 
 export interface ITrack {
@@ -31,6 +32,13 @@ const initialState: TracksState = {
     error: false,
 };
 
+export const selectAlbumInfo = (state: RootState) => state.tracks.albumInfo;
+export const selectTrack = (state: RootState) =>
+    state.tracks.tracks;
+export const selectLoadingTracks = (state: RootState) =>
+    state.tracks.isLoading;
+export const selectErrorTracks = (state: RootState) =>
+    state.tracks.error;
 
 export const sliceTracks = createSlice({
     name: "track",

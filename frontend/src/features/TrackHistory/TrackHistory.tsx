@@ -5,11 +5,14 @@ import {selectUser} from "../users/userSlice.ts";
 import {TrackHistoryItem} from "../../types";
 import Grid from "@mui/material/Grid2";
 import dayjs from "dayjs";
-import {Alert, Card, CardContent, Typography} from "@mui/material";
+import {Alert, Card, CardContent, CircularProgress, Typography} from "@mui/material";
+import {selectTrackHistory, selectTrackHistoryLoading, selectTrackHistoryLoadingError} from "./sliceTrackHistory.ts";
 
 const TrackHistory = () => {
     const dispatch = useAppDispatch();
-    const trackHistory = useAppSelector((state) => state.trackHistory.trackHistory)
+    const trackHistory = useAppSelector(selectTrackHistory);
+    const loading = useAppSelector(selectTrackHistoryLoading);
+    const error = useAppSelector(selectTrackHistoryLoadingError);
     const user = useAppSelector(selectUser);
 
     useEffect(() => {
@@ -17,6 +20,23 @@ const TrackHistory = () => {
             dispatch(fetchTrackHistory({ token: user.token }));
         }
     }, [dispatch, user?.token]);
+
+
+    if (loading) {
+        return (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                <CircularProgress />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <Alert severity="error" style={{ marginTop: "20px", textAlign: "center" }}>
+                Error loading track history
+            </Alert>
+        );
+    }
 
 
     return (
@@ -43,7 +63,7 @@ const TrackHistory = () => {
                     ))}
                 </Grid>
             ) : (
-                <Alert severity="info">No tracks found</Alert>
+                <Alert severity="info">No track history found</Alert>
             )}
         </>
     );

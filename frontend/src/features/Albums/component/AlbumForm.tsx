@@ -1,33 +1,42 @@
-import React, {ChangeEvent, FormEvent, useState} from "react";
+import React, {ChangeEvent, FormEvent, useEffect, useState} from "react";
 import Grid from "@mui/material/Grid2";
-import {Button, FormControl, InputLabel, Select, SelectChangeEvent, TextField} from "@mui/material";
+import {Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks";
 import {useNavigate} from "react-router-dom";
 import {createAlbum} from "../thunkAlbums.ts";
 import FileInput from "../../../components/FileInput/FileInput.tsx";
 import {selectLoadingAlbum} from "../sliceAlbums.ts";
+import {selectArtist} from "../../Artists/sliceArtists.ts";
+import {fetchArtists} from "../../Artists/thunkArtists.ts";
 
 
 interface FormState {
     name: string;
     artist: string;
-    releaseYear: number;
+    releaseYear: string;
     coverImage: File | null;
 }
 
 const initialState: FormState = {
     name: "",
     artist: "",
-    releaseYear: 0,
+    releaseYear: "",
     coverImage: null,
 };
 
 const AlbumForm = () => {
     const [form, setForm] = useState(initialState);
+    const artists = useAppSelector(selectArtist);
     const loading = useAppSelector(selectLoadingAlbum);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        dispatch(fetchArtists());
+    }, [dispatch]);
+
 
     const submitFormHandler = async (e: FormEvent) => {
         e.preventDefault();
@@ -37,45 +46,42 @@ const AlbumForm = () => {
             return;
         }
 
-        try {
-            const formData = new FormData();
-            Object.entries(form).forEach(([key, value]) => {
-                if (value !== null) {
-                    if (key === "coverImage" && value instanceof File) {
-                        formData.append(key, value);
-                    } else {
-                        formData.append(key, String(value));
-                    }
-                }
-            });
+        const formData = new FormData();
+        formData.append('name', form.name);
+        formData.append('artist', form.artist);
+        formData.append('releaseYear', form.releaseYear);
+        formData.append('coverImage', form.coverImage);
 
+        try {
             await dispatch(createAlbum(formData));
             setForm(initialState);
-            navigate("/");
-
+            navigate('/');
         } catch (error) {
-            console.error("Error when adding album:", error);
+            console.error('Error creating album:', error);
         }
     };
 
     const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setForm((prevState) => ({ ...prevState, [name]: value }));
+        setForm((prevState) => ({
+            ...prevState,
+            [name]: name === "releaseYear" ? (value ? Number(value) : "") : value,
+        }));
     };
 
     const fileEventChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, files } = e.target;
-
-        if (files) {
+        if (files && files.length > 0) {
             setForm((prevState) => ({
                 ...prevState,
-                [name]: files[0] || null,
+                [name]: files[0],
             }));
         }
     };
 
     const selectChangeHandler = (e: SelectChangeEvent<string>) => {
-        setForm((prevState) => ({ ...prevState, artist: e.target.value as string }));
+        const { name, value } = e.target;
+        setForm((prevState) => ({ ...prevState, [name]: value }));
     };
 
 
@@ -111,33 +117,43 @@ const AlbumForm = () => {
                         <TextField
                             id="name"
                             name="name"
-                            label="Album Name"
-                            value={form.name}
+                            label="Album name"
+                            value={form.name || ""}
                             onChange={inputChangeHandler}
                             fullWidth
+                            type="text"
                         />
                     </Grid>
 
-                    <Grid>
-                        <FormControl fullWidth>
-                            <InputLabel id="artist-label">Artist</InputLabel>
-                            <Select
-                                labelId="artist-label"
-                                id="artist"
-                                name="artist"
-                                value={form.artist}
-                                onChange={selectChangeHandler}
-                            >
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                    <FormControl fullWidth>
+                        <InputLabel id="artist-label">Artist</InputLabel>
+                        <Select
+                            labelId="artist-label"
+                            id="artist"
+                            name="artist"
+                            value={form.artist}
+                            label="Artist"
+                            onChange={selectChangeHandler}
+                            fullWidth
+                        >
+                            {loading ? (
+                                <MenuItem value="">Loading...</MenuItem>
+                            ) : (
+                                (artists || []).map((artist) => (
+                                    <MenuItem key={artist._id} value={artist._id}>
+                                        {artist.name}
+                                    </MenuItem>
+                                ))
+                            )}
+                        </Select>
+                    </FormControl>
 
                     <Grid>
                         <TextField
                             id="releaseYear"
                             name="releaseYear"
                             label="Release Year"
-                            value={form.releaseYear}
+                            value={form.releaseYear || ""}
                             onChange={inputChangeHandler}
                             fullWidth
                             type="number"
@@ -158,19 +174,20 @@ const AlbumForm = () => {
                             variant="contained"
                             fullWidth
                             sx={{
-                                background: "linear-gradient(90deg, #1E3A8A, #2563EB)",
+                                background: loading ? "gray" : "linear-gradient(90deg, #1E3A8A, #2563EB)",
                                 borderRadius: "20px",
                                 textTransform: "uppercase",
                                 padding: "12px",
+                                opacity: loading ? 0.5 : 1,
                                 "&:hover": {
-                                    background: "linear-gradient(90deg, #2563EB, #1E3A8A)",
-                                    transform: "scale(1.05)",
+                                    background: loading ? "gray" : "linear-gradient(90deg, #2563EB, #1E3A8A)",
+                                    transform: loading ? "none" : "scale(1.05)",
                                     boxShadow: "0 4px 16px rgba(0, 0, 0, 0.15)",
                                 },
                             }}
                             disabled={loading}
                         >
-                            Create Album
+                            {loading ? "Creating..." : "Create Album"}
                         </Button>
                     </Grid>
                 </Grid>

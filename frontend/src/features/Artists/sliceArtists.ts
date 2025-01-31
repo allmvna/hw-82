@@ -23,7 +23,11 @@ const initialState: ArtistState = {
 };
 
 export const selectArtist = (state: RootState) =>
+    state.artists.artists;
+export const selectLoadingArtist = (state: RootState) =>
     state.artists.isLoading;
+export const selectErrorArtist = (state: RootState) =>
+    state.artists.error;
 
 export const sliceArtists = createSlice({
     name: "artist",

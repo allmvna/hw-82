@@ -14,12 +14,7 @@ export const createArtist = createAsyncThunk(
     'artists/createArtist',
     async (formData: FormData) => {
         try {
-            const response = await axiosAPI.post('/new_artist', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
+            const response = await axiosAPI.post('/artists/new_artist', formData);
             return response.data;
         } catch (error) {
             console.error('Error creating artist:', error);

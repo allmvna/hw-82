@@ -1,9 +1,21 @@
-import  { useState, ChangeEvent, FormEvent } from 'react';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import Grid from "@mui/material/Grid2";
-import { Button, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../../app/hooks';
+import {
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    TextField,
+    Typography
+} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {createTrack} from "../thunkTracks.ts";
+import {selectLoadingTracks} from "../sliceTracks.ts";
+import {selectALlAlbums} from "../../Albums/sliceAlbums.ts";
+import {fetchAllAlbums} from "../../Albums/thunkAlbums.ts";
 
 
 const initialState = {
@@ -16,7 +28,14 @@ const initialState = {
 const TrackForm = () => {
     const [form, setForm] = useState(initialState);
     const dispatch = useAppDispatch();
+    const allAlbums = useAppSelector(selectALlAlbums);
+    const loading = useAppSelector(selectLoadingTracks);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        dispatch(fetchAllAlbums());
+    }, [dispatch]);
+
 
     const submitFormHandler = async (e: FormEvent) => {
         e.preventDefault();
@@ -31,7 +50,7 @@ const TrackForm = () => {
             setForm(initialState);
             navigate('/');
         } catch (error) {
-            console.error('Error when adding track:', error);
+            console.error('Error adding track:', error);
         }
     };
 
@@ -39,6 +58,11 @@ const TrackForm = () => {
         const { name, value } = e.target;
         setForm((prevState) => ({ ...prevState, [name]: value }));
     };
+
+    const selectChangeHandler = (e: SelectChangeEvent<string>) => {
+        setForm((prevState) => ({ ...prevState, album: e.target.value }));
+    };
+
 
     return (
         <div>
@@ -72,7 +96,7 @@ const TrackForm = () => {
                         <TextField
                             id="name"
                             name="name"
-                            label="Track Name"
+                            label="Track name"
                             value={form.name}
                             onChange={inputChangeHandler}
                             fullWidth
@@ -80,14 +104,28 @@ const TrackForm = () => {
                     </Grid>
 
                     <Grid>
-                        <TextField
-                            id="album"
-                            name="album"
-                            label="Album"
-                            value={form.album}
-                            onChange={inputChangeHandler}
-                            fullWidth
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="album-label">Album</InputLabel>
+                            <Select
+                                labelId="album-label"
+                                id="album"
+                                name="album"
+                                value={form.album}
+                                label="Album"
+                                onChange={selectChangeHandler}
+                                fullWidth
+                            >
+                                {loading ? (
+                                    <MenuItem value="">Loading...</MenuItem>
+                                ) : (
+                                    allAlbums.map((album) => (
+                                        <MenuItem key={album._id} value={album._id}>
+                                            {album.name}
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </Select>
+                        </FormControl>
                     </Grid>
 
                     <Grid>

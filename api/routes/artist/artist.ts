@@ -6,7 +6,8 @@ import permit from "../../middleware/permit";
 
 const artistRouter = express.Router();
 
-artistRouter.post('/', auth, imagesUpload.single('photo'), async (req, res) => {const expressReq = req as RequestWithUser;
+artistRouter.post('/new_artist', auth, imagesUpload.single('photo'), async (req, res) => {
+    const expressReq = req as RequestWithUser;
     const user = expressReq.user;
 
     if (!user) {
@@ -16,7 +17,6 @@ artistRouter.post('/', auth, imagesUpload.single('photo'), async (req, res) => {
 
     try {
         const { name, information } = req.body;
-        const photo = req.file ? req.file.filename : null;
 
         if (!name) {
             res.status(400).json({ message: "Name is required" })
@@ -25,7 +25,7 @@ artistRouter.post('/', auth, imagesUpload.single('photo'), async (req, res) => {
 
         const newArtist = new Artist({
             name,
-            photo,
+            photo: req.file ? '/images' + req.file.filename : null,
             information
         });
 
@@ -79,7 +79,7 @@ artistRouter.patch('/artists/:id/togglePublished', auth, permit('admin'), async 
         artist.isPublished = !artist.isPublished;
         await artist.save();
 
-        res.status(200).json({ message: `Artist ${artist.isPublished ? 'published' : 'unpublished'}`, artist });
+        res.status(200).json({ message: `Artist ${artist.isPublished ? 'true' : 'false'}`, artist });
     } catch (error) {
         res.status(500).json({ error: 'Error toggling artist publication' });
     }

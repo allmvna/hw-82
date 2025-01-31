@@ -5,23 +5,26 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {fetchArtists} from "./thunkArtists.ts";
+import {selectArtist, selectErrorArtist, selectLoadingArtist} from "./sliceArtists.ts";
 
 const Artists = () => {
-    const { artists, isLoading, error } = useAppSelector((state) => state.artists);
+    const artists = useAppSelector(selectArtist);
+    const loading = useAppSelector(selectLoadingArtist);
+    const error = useAppSelector(selectErrorArtist);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchArtists());
     }, [dispatch]);
 
-    if (isLoading) {
+
+    if (loading) {
         return (
             <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <CircularProgress />
             </div>
         );
     }
-
 
     if (error) {
         return (

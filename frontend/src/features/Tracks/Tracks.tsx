@@ -6,10 +6,14 @@ import Grid from "@mui/material/Grid2";
 import {selectUser} from "../users/userSlice.ts";
 import {addTrackToHistory} from "../TrackHistory/thunkTrackHistory.ts";
 import {fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {selectAlbumInfo, selectErrorTracks, selectLoadingTracks, selectTrack} from "./sliceTracks.ts";
 
 const Tracks = () => {
     const { albumName } = useParams<{ albumName: string }>();
-    const { tracks, albumInfo, isLoading, error } = useAppSelector((state) => state.tracks);
+    const albumInfo = useAppSelector(selectAlbumInfo);
+    const tracks = useAppSelector(selectTrack);
+    const loading = useAppSelector(selectLoadingTracks);
+    const error = useAppSelector(selectErrorTracks);
     const user = useAppSelector(selectUser);
     const dispatch = useAppDispatch();
 
@@ -30,7 +34,7 @@ const Tracks = () => {
         dispatch(addTrackToHistory({ track: trackId, token: user.token }));
     };
 
-    if (isLoading) {
+    if (loading) {
         return (
             <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <CircularProgress />
@@ -42,6 +46,14 @@ const Tracks = () => {
         return (
             <Alert severity="error" style={{ marginTop: "20px", textAlign: "center" }}>
                 Error loading tracks
+            </Alert>
+        );
+    }
+
+    if (!loading && !error && tracks.length === 0) {
+        return (
+            <Alert severity="info" sx={{ textAlign: "center", mt: 4 }}>
+                No tracks found in the album "{albumName}".
             </Alert>
         );
     }
