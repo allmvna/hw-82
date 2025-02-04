@@ -15,11 +15,14 @@ import { register } from "./userThunks.ts";
 import { IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {RegisterMutation} from "../../types";
+import FileInput from "../../components/FileInput/FileInput.tsx";
 
 const RegisterPage = () => {
   const [form, setForm] = useState<RegisterMutation>({
     username: "",
-    password: ""
+    password: "",
+      displayName: "",
+      avatar: null as File | null,
   });
 
   const dispatch = useAppDispatch();
@@ -32,7 +35,19 @@ const RegisterPage = () => {
     setForm({ ...form, [name]: value });
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+    const fileEventChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, files } = e.target;
+
+        if (files) {
+            setForm((prevState) => ({
+                ...prevState,
+                [name]: files[0] || null,
+            }));
+        }
+    };
+
+
+    const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -124,6 +139,25 @@ const RegisterPage = () => {
                 }}
               />
             </Grid>
+              <Grid>
+                  <TextField
+                      required
+                      fullWidth
+                      type="text"
+                      name="displayName"
+                      label="Display name"
+                      id="displayName"
+                      value={form.displayName}
+                      onChange={inputChange}
+                  />
+              </Grid>
+              <Grid>
+                  <FileInput
+                      name="avatar"
+                      label="Avatar"
+                      onGetFile={fileEventChangeHandler}
+                  />
+              </Grid>
           </Grid>
           <Button
             type="submit"

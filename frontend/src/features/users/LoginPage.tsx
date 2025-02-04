@@ -12,9 +12,10 @@ import Container from "@mui/material/Container";
 import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
 import { selectLoginError } from "./userSlice.ts";
 import { NavLink, useNavigate } from "react-router-dom";
-import { login } from "./userThunks.ts";
+import {googleLogin, login} from "./userThunks.ts";
 import { Alert, IconButton, InputAdornment } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { GoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
   const [form, setForm] = useState<RegisterMutation>({
@@ -26,6 +27,11 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
   const loginError = useAppSelector(selectLoginError);
   const navigate = useNavigate();
+
+    const googleLoginHandler = async (credential: string) => {
+        await dispatch(googleLogin(credential)).unwrap();
+        navigate('/');
+    };
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -69,7 +75,21 @@ const LoginPage = () => {
             {loginError.error}
           </Alert>
         )}
-        <Box
+
+          <Box sx={{ pt: 2 }}>
+              <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                      if (credentialResponse.credential) {
+                          void googleLoginHandler(credentialResponse.credential);
+                      }
+                  }}
+                  onError={() => {
+                      console.log('Login Failed');
+                  }}
+              />
+          </Box>
+
+          <Box
           component="form"
           noValidate
           onSubmit={onSubmit}

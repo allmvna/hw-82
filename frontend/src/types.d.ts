@@ -5,11 +5,15 @@ export interface UserFields {
     username: string;
     token: string;
     role: string;
+    displayName: string;
+    avatar: File | null;
 }
 
 export interface RegisterMutation {
     username: string;
     password: string;
+    displayName: string;
+    avatar: File | null;
 }
 
 export interface LoginMutation {

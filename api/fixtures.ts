@@ -26,8 +26,8 @@ const run = async () => {
 
 
     const [user1, user2] = await User.create([
-        { username: "user@shop.com", password: "123", role: "user", token: randomUUID() },
-        { username: "admin@shop.com", password: "456", role: "admin", token: randomUUID() },
+        { username: "user@shop.com", password: "123", role: "user", token: randomUUID(), displayName: "User", avatar: 'fixtures/user.jpg' },
+        { username: "admin@shop.com", password: "456", role: "admin", token: randomUUID(), displayName: "Admin", avatar: 'fixtures/admin.jpg' },
     ]);
 
     const [artist1, artist2, artist3, artist4] = await Artist.create([

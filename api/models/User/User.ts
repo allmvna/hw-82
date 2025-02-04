@@ -39,6 +39,16 @@ const userSchema = new mongoose.Schema<HydratedDocument<UserFields>, UserModel, 
     token: {
         type: String,
         required: true,
+    },
+    displayName: {
+        type: String,
+        required: true,
+    },
+    googleID: {
+        type: String,
+    },
+    avatar: {
+        type: String,
     }
 });
 
