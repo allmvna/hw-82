@@ -22,3 +22,16 @@ export const createArtist = createAsyncThunk(
         }
     }
 );
+
+export const deleteArtist = createAsyncThunk(
+    'artists/deleteArtist',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.delete(`/artists/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting artist:', error);
+            throw error;
+        }
+    }
+);

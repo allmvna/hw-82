@@ -1,11 +1,12 @@
-import {Alert, Card, CardContent, CardMedia, CircularProgress, Typography} from "@mui/material";
+import {Alert, Button, Card, CardContent, CardMedia, CircularProgress, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
-import {Link, useParams} from "react-router-dom";
-import {fetchAlbums} from "./thunkAlbums.ts";
+import {Link, useNavigate, useParams} from "react-router-dom";
+import {deleteAlbum, fetchAlbums} from "./thunkAlbums.ts";
 import {selectAlbumByArtist, selectErrorAlbum, selectLoadingAlbum} from "./sliceAlbums.ts";
+import {selectUser} from "../users/userSlice.ts";
 
 
 const Albums = () => {
@@ -14,6 +15,8 @@ const Albums = () => {
     const error = useAppSelector(selectErrorAlbum);
     const loading = useAppSelector(selectLoadingAlbum);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const user = useAppSelector(selectUser);
 
 
     useEffect(() => {
@@ -21,6 +24,17 @@ const Albums = () => {
             dispatch(fetchAlbums(artistName));
         }
     }, [artistName, dispatch]);
+
+    const handleDelete = (id: string) => {
+
+        if (!user?.token || user?.role !== 'admin') {
+            alert("You do not have permission to delete this!");
+            return;
+        }
+
+        dispatch(deleteAlbum(id));
+        navigate('/');
+    };
 
 
     if (loading) {
@@ -96,6 +110,13 @@ const Albums = () => {
                                 <Typography sx={{ fontSize: 20 }}>
                                     {album.releaseYear}
                                 </Typography>
+                                {user?.role === 'admin' && (
+                                <Button
+                                    onClick={() => handleDelete(album._id)}
+                                >
+                                    Delete
+                                </Button>
+                                )}
                             </CardContent>
                         </Card>
                         </Link>

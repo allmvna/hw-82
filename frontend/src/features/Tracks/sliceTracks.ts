@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {createTrack, deleteTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -77,6 +77,19 @@ export const sliceTracks = createSlice({
                 state.tracks.push(action.payload);
             })
             .addCase(createTrack.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(deleteTrack.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(deleteTrack.fulfilled, (state, action) => {
+                state.isLoading = false;
+                const deletedTrackId = action.payload;
+                state.tracks = state.tracks.filter(track => track._id !== deletedTrackId);
+            })
+            .addCase(deleteTrack.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

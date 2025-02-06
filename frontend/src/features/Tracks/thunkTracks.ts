@@ -57,3 +57,16 @@ export const createTrack = createAsyncThunk(
         }
     }
 );
+
+export const deleteTrack = createAsyncThunk(
+    'tracks/deleteTrack',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.delete(`/tracks/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting track:', error);
+            throw error;
+        }
+    }
+);

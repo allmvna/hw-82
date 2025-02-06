@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createArtist, fetchArtists} from "./thunkArtists.ts";
+import {createArtist, deleteArtist, fetchArtists} from "./thunkArtists.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -56,6 +56,19 @@ export const sliceArtists = createSlice({
                 state.artists.push(action.payload);
             })
             .addCase(createArtist.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(deleteArtist.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(deleteArtist.fulfilled, (state, action) => {
+                state.isLoading = false;
+                const deletedArtistId = action.payload;
+                state.artists = state.artists.filter(artist => artist._id !== deletedArtistId);
+            })
+            .addCase(deleteArtist.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

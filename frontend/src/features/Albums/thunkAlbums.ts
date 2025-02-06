@@ -36,3 +36,16 @@ export const createAlbum = createAsyncThunk(
         }
     }
 );
+
+export const deleteAlbum = createAsyncThunk(
+    'albums/deleteAlbum',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.delete(`/albums/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error deleting album:', error);
+            throw error;
+        }
+    }
+);

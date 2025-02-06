@@ -5,7 +5,7 @@ import {Alert, Button, Card, CardContent, CircularProgress, Typography,} from "@
 import Grid from "@mui/material/Grid2";
 import {selectUser} from "../users/userSlice.ts";
 import {addTrackToHistory} from "../TrackHistory/thunkTrackHistory.ts";
-import {fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {deleteTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
 import {selectAlbumInfo, selectErrorTracks, selectLoadingTracks, selectTrack} from "./sliceTracks.ts";
 
 const Tracks = () => {
@@ -33,6 +33,23 @@ const Tracks = () => {
 
         dispatch(addTrackToHistory({ track: trackId, token: user.token }));
     };
+
+    const handleDelete = async (id: string) => {
+        try {
+            if (!user?.token || user?.role !== 'admin') {
+                alert("You do not have permission to delete this!");
+                return;
+            }
+
+            await dispatch(deleteTrack(id));
+            if (albumName != null) {
+                dispatch(fetchTracks(albumName));
+            }
+        } catch (error) {
+            console.log("Error deleting track:", error);
+        }
+    };
+
 
     if (loading) {
         return (
@@ -107,6 +124,21 @@ const Tracks = () => {
                                 )}
 
                             </Grid>
+                            {user?.role === 'admin' && (
+                            <Button
+                                sx={{
+                                    cursor: 'pointer',
+                                    transition: 'color 0.3s, transform 0.3s',
+                                    '&:hover': {
+                                        color: 'blue',
+                                        transform: 'scale(1.2)',
+                                    },
+                                }}
+                                onClick={() => handleDelete(track._id)}
+                            >
+                                Delete
+                            </Button>
+                            )}
                         </CardContent>
                     </Card>
                 </Grid>
