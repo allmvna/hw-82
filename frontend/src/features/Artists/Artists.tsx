@@ -16,8 +16,10 @@ const Artists = () => {
     const user = useAppSelector(selectUser);
 
     useEffect(() => {
-        dispatch(fetchArtists());
-    }, [dispatch]);
+        if (user?.token) {
+            dispatch(fetchArtists({ token: user.token }));
+        }
+    }, [dispatch, user?.token]);
 
     const handleDelete = (id: string) => {
         try {

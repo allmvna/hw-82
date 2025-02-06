@@ -113,18 +113,18 @@ const Albums = () => {
                                 <Typography sx={{ fontSize: 20 }}>
                                     {album.releaseYear}
                                 </Typography>
-                                <Grid display='flex' alignItems='center'>
+                                <Grid display='flex' alignItems='center' gap='10px' mt='5px'>
                                     {!album.isPublished && user?.role === 'admin' && (
                                         <Button
                                             onClick={() => handleTogglePublish(album._id)}
-                                            variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                            variant="contained" sx={{ backgroundColor : 'black'}}
                                         >
                                             Publish
                                         </Button>
                                     )}
                                     {user?.role === 'admin' && (
                                         <Button
-                                            variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                            variant="contained" sx={{ backgroundColor : 'black'}}
                                             onClick={() => handleDelete(album._id)}
                                         >
                                             Delete

@@ -3,12 +3,19 @@ import axiosAPI from "../../axiosAPI.ts";
 
 export const fetchArtists = createAsyncThunk(
     'artists/fetchArtists',
-    async () => {
-        const response = await axiosAPI.get('/artists');
+    async ({ token }: { token: string }) => {
+        if (!token) {
+            console.log("Unauthorized: Token is missing");
+            return [];
+        }
+
+        const response = await axiosAPI.get('/artists', {
+            headers: { Authorization: token },
+        });
+
         return response.data;
     }
 );
-
 
 export const createArtist = createAsyncThunk(
     'artists/createArtist',
