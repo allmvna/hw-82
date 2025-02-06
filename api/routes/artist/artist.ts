@@ -36,9 +36,30 @@ artistRouter.post('/new_artist', auth, imagesUpload.single('photo'), async (req,
     }
 });
 
-artistRouter.get('/', async (req, res) => {
-    const artists = await Artist.find();
-    res.json(artists);
+artistRouter.get('/', auth, async (req, res) => {
+    try {
+        const expressReq = req as RequestWithUser;
+        const user = expressReq.user;
+
+        if (!user) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
+        let query = user.role === 'admin'
+            ? {}
+            : {
+                $or: [
+                    { isPublished: true },
+                    { ownerId: user.id, isPublished: false }
+                ]
+            };
+
+        const artists = await Artist.find(query);
+        res.status(200).json(artists);
+    } catch (error) {
+        res.status(500).json({ error: 'Error in getting the list of artists' });
+    }
 });
 
 artistRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
@@ -66,7 +87,7 @@ artistRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
     }
 });
 
-artistRouter.patch('/artists/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+artistRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
     try {
         const artistId = req.params.id;
         const artist = await Artist.findById(artistId);

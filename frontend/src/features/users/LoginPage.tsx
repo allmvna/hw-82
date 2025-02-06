@@ -21,6 +21,8 @@ const LoginPage = () => {
   const [form, setForm] = useState<RegisterMutation>({
     username: "",
     password: "",
+      displayName: "",
+      avatar: null as File | null,
   });
   const [password, setPassword] = useState<boolean>(false);
 

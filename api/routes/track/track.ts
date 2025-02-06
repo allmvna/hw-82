@@ -6,38 +6,52 @@ import permit from "../../middleware/permit";
 
 const trackRouter = express.Router();
 
-trackRouter.get('/', async (req, res) => {
+trackRouter.get('/', auth, async (req, res) => {
     try {
+        const expressReq = req as RequestWithUser;
+        const user = expressReq.user;
+
+        if (!user) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
         const { album } = req.query as { album?: string };
+
+        let query: Record<string, unknown> = { isPublished: true };
+
+        if (user.role === 'admin') {
+            query = {};
+        } else if (user.role === 'user') {
+            query = {
+                $or: [
+                    { isPublished: true },
+                    { ownerId: user.id, isPublished: false }
+                ]
+            };
+        }
 
         if (album) {
             const albumDoc = await Album.findOne({ name: album });
 
             if (!albumDoc) {
                 res.status(404).json({ error: 'Album not found' });
-            return;
+                return;
             }
 
-            const tracks = await Track.find({ album: albumDoc._id })
-                .populate('album')
-                .sort({ trackNumber: 1 });
-
-            res.json(tracks);
-            return;
+            query.album = albumDoc._id;
         }
 
-        const tracks = await Track.find()
+        const tracks = await Track.find(query)
             .populate('album')
             .sort({ trackNumber: 1 });
 
         res.json(tracks);
-        return;
-
     } catch (error) {
-        console.error('Error fetching tracks:', error);
         res.status(500).json({ error: 'Error fetching tracks' });
     }
 });
+
 
 trackRouter.post('/new_track', auth, async (req, res) => {
     const expressReq = req as RequestWithUser;

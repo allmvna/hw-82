@@ -12,10 +12,25 @@ interface Query {
     artist?: string;
 }
 
-albumRouter.get('/', async (req, res) => {
+albumRouter.get('/', auth, async (req, res) => {
     try {
+        const expressReq = req as RequestWithUser;
+        const user = expressReq.user;
+
+        if (!user) {
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
+        }
+
         const { artist } = req.query as Query;
-        let query: { artist?: mongoose.Types.ObjectId } = {};
+        let query: { artist?: mongoose.Types.ObjectId, isPublished?: boolean } = { isPublished: true };
+
+        if (user.role === 'admin') {
+            query = {};
+        } else if (user.role === 'user') {
+            query.isPublished = true;
+        }
+
         if (artist) {
             const artistDoc = await Artist.findOne({ name: artist });
             if (artistDoc) {
@@ -25,10 +40,10 @@ albumRouter.get('/', async (req, res) => {
                 return;
             }
         }
+
         const albums = await Album.find(query)
             .populate('artist')
             .sort({ year: -1 });
-
 
         res.json(albums);
     } catch (error) {
@@ -107,7 +122,7 @@ albumRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
     }
 });
 
-albumRouter.patch('/albums/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+albumRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
     try {
         const albumId = req.params.id;
         const album = await Album.findById(albumId);
