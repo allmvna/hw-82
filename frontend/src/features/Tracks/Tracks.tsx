@@ -5,7 +5,7 @@ import {Alert, Button, Card, CardContent, CircularProgress, Typography,} from "@
 import Grid from "@mui/material/Grid2";
 import {selectUser} from "../users/userSlice.ts";
 import {addTrackToHistory} from "../TrackHistory/thunkTrackHistory.ts";
-import {deleteTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {deleteTrack, fetchAlbumDetails, fetchTracks, toggleTrackPublished} from "./thunkTracks.ts";
 import {selectAlbumInfo, selectErrorTracks, selectLoadingTracks, selectTrack} from "./sliceTracks.ts";
 
 const Tracks = () => {
@@ -48,6 +48,15 @@ const Tracks = () => {
         } catch (error) {
             console.log("Error deleting track:", error);
         }
+    };
+
+    const handleTogglePublish = (trackId: string) => {
+        if (user?.role !== 'admin') {
+            alert("You do not have permission to perform this action!");
+            return;
+        }
+
+        dispatch(toggleTrackPublished(trackId));
     };
 
 
@@ -122,7 +131,6 @@ const Tracks = () => {
                                         onClick={() => handleClick(track._id)}
                                     >Play</Button>
                                 )}
-
                             </Grid>
                             {user?.role === 'admin' && (
                             <Button
@@ -138,6 +146,20 @@ const Tracks = () => {
                             >
                                 Delete
                             </Button>
+                            )}
+                            {!track.isPublished && user?.role === 'admin' && (
+                                <Button
+                                    onClick={() => handleTogglePublish(track._id)}
+                                    variant='outlined'
+                                    sx={{
+                                        marginLeft: '20px',
+                                        '&:hover': {
+                                            backgroundColor: 'blue',
+                                            color: 'white'
+                                        },}}
+                                >
+                                    Publish
+                                </Button>
                             )}
                         </CardContent>
                     </Card>

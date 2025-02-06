@@ -4,7 +4,7 @@ import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {deleteAlbum, fetchAlbums} from "./thunkAlbums.ts";
+import {deleteAlbum, fetchAlbums, toggleAlbumPublished} from "./thunkAlbums.ts";
 import {selectAlbumByArtist, selectErrorAlbum, selectLoadingAlbum} from "./sliceAlbums.ts";
 import {selectUser} from "../users/userSlice.ts";
 
@@ -36,6 +36,14 @@ const Albums = () => {
         navigate('/');
     };
 
+    const handleTogglePublish = (albumId: string) => {
+        if (user?.role !== 'admin') {
+            alert("You do not have permission to perform this action!");
+            return;
+        }
+
+        dispatch(toggleAlbumPublished(albumId));
+    };
 
     if (loading) {
         return (
@@ -75,12 +83,7 @@ const Albums = () => {
                             sx={{
                                 minWidth: 300,
                                 borderRadius: "10px",
-                                cursor: "pointer",
-                                '&:hover': {
-                                    transform: "scale(1.05)",
-                                    transition: "all 0.3s ease",
-                                },
-                                transition: "all 0.3s ease",
+                                cursor: "pointer"
                             }}
                         >
                             <CardContent
@@ -110,13 +113,24 @@ const Albums = () => {
                                 <Typography sx={{ fontSize: 20 }}>
                                     {album.releaseYear}
                                 </Typography>
-                                {user?.role === 'admin' && (
-                                <Button
-                                    onClick={() => handleDelete(album._id)}
-                                >
-                                    Delete
-                                </Button>
-                                )}
+                                <Grid display='flex' alignItems='center'>
+                                    {!album.isPublished && user?.role === 'admin' && (
+                                        <Button
+                                            onClick={() => handleTogglePublish(album._id)}
+                                            variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                        >
+                                            Publish
+                                        </Button>
+                                    )}
+                                    {user?.role === 'admin' && (
+                                        <Button
+                                            variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                            onClick={() => handleDelete(album._id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
+                                </Grid>
                             </CardContent>
                         </Card>
                         </Link>

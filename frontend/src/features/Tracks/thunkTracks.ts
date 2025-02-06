@@ -70,3 +70,19 @@ export const deleteTrack = createAsyncThunk(
         }
     }
 );
+
+export const toggleTrackPublished = createAsyncThunk(
+    'tracks/toggleTrackPublished',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.patch(
+                `/tracks/${id}/togglePublished`,
+                {}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error toggling track publication:', error);
+            throw error;
+        }
+    }
+);

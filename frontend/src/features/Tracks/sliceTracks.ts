@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createTrack, deleteTrack, fetchAlbumDetails, fetchTracks} from "./thunkTracks.ts";
+import {createTrack, deleteTrack, fetchAlbumDetails, fetchTracks, toggleTrackPublished} from "./thunkTracks.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -10,6 +10,7 @@ export interface ITrack {
     duration: string;
     trackNumber: number;
     album: string;
+    isPublished: boolean;
 }
 
 interface IAlbumInfo {
@@ -90,6 +91,24 @@ export const sliceTracks = createSlice({
                 state.tracks = state.tracks.filter(track => track._id !== deletedTrackId);
             })
             .addCase(deleteTrack.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(toggleTrackPublished.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(toggleTrackPublished.fulfilled, (state, action) => {
+                state.isLoading = false;
+
+                const trackId = action.payload.track._id;
+                const updatedTracks = action.payload.track;
+                const index = state.tracks.findIndex(track => track._id === trackId);
+                if (index !== -1) {
+                    state.tracks[index] = updatedTracks;
+                }
+            })
+            .addCase(toggleTrackPublished.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

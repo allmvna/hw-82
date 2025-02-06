@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createArtist, deleteArtist, fetchArtists} from "./thunkArtists.ts";
+import {createArtist, deleteArtist, fetchArtists, toggleArtistPublished} from "./thunkArtists.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -7,7 +7,8 @@ export interface IArtist {
     _id: string;
     name: string;
     photo: string;
-    information: string
+    information: string;
+    isPublished: boolean;
 }
 
 interface ArtistState{
@@ -69,6 +70,24 @@ export const sliceArtists = createSlice({
                 state.artists = state.artists.filter(artist => artist._id !== deletedArtistId);
             })
             .addCase(deleteArtist.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(toggleArtistPublished.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(toggleArtistPublished.fulfilled, (state, action) => {
+                state.isLoading = false;
+
+                const artistId = action.payload.artist._id;
+                const updatedArtist = action.payload.artist;
+                const index = state.artists.findIndex(artist => artist._id === artistId);
+                if (index !== -1) {
+                    state.artists[index] = updatedArtist;
+                }
+            })
+            .addCase(toggleArtistPublished.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

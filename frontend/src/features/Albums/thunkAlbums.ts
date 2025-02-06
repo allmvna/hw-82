@@ -49,3 +49,20 @@ export const deleteAlbum = createAsyncThunk(
         }
     }
 );
+
+
+export const toggleAlbumPublished = createAsyncThunk(
+    'albums/toggleAlbumPublished',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.patch(
+                `/albums/${id}/togglePublished`,
+                {}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error toggling album publication:', error);
+            throw error;
+        }
+    }
+);

@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {createAlbum, deleteAlbum, fetchAlbums, fetchAllAlbums} from "./thunkAlbums.ts";
+import {createAlbum, deleteAlbum, fetchAlbums, fetchAllAlbums, toggleAlbumPublished} from "./thunkAlbums.ts";
 import {RootState} from "../../app/store.ts";
 
 
@@ -9,6 +9,7 @@ export interface IAlbum {
     artist: string;
     coverImage: string | null;
     releaseYear: number;
+    isPublished: boolean;
 }
 
 interface AlbumsState {
@@ -83,6 +84,24 @@ export const sliceAlbums = createSlice({
                 state.albums = state.albums.filter(album => album._id !== deletedAlbumId);
             })
             .addCase(deleteAlbum.rejected, (state) => {
+                state.isLoading = false;
+                state.error = true;
+            })
+            .addCase(toggleAlbumPublished.pending, (state) => {
+                state.isLoading = true;
+                state.error = false;
+            })
+            .addCase(toggleAlbumPublished.fulfilled, (state, action) => {
+                state.isLoading = false;
+
+                const albumId = action.payload.album._id;
+                const updatedAlbum = action.payload.album;
+                const index = state.albums.findIndex(album => album._id === albumId);
+                if (index !== -1) {
+                    state.albums[index] = updatedAlbum;
+                }
+            })
+            .addCase(toggleAlbumPublished.rejected, (state) => {
                 state.isLoading = false;
                 state.error = true;
             });

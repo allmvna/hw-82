@@ -35,3 +35,20 @@ export const deleteArtist = createAsyncThunk(
         }
     }
 );
+
+
+export const toggleArtistPublished = createAsyncThunk(
+    'artists/toggleArtistPublished',
+    async (id: string) => {
+        try {
+            const response = await axiosAPI.patch(
+                `/artists/${id}/togglePublished`,
+                {}
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error toggling artists publication:', error);
+            throw error;
+        }
+    }
+);

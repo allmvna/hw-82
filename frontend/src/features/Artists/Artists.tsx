@@ -4,7 +4,7 @@ import axiosAPI from "../../axiosAPI.ts";
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
 import {Link} from "react-router-dom";
-import {deleteArtist, fetchArtists} from "./thunkArtists.ts";
+import {deleteArtist, fetchArtists, toggleArtistPublished} from "./thunkArtists.ts";
 import {selectArtist, selectErrorArtist, selectLoadingArtist} from "./sliceArtists.ts";
 import {selectUser} from "../users/userSlice.ts";
 
@@ -30,6 +30,16 @@ const Artists = () => {
             console.log(error);
         }
     };
+
+    const handleTogglePublish = (artistId: string) => {
+        if (user?.role !== 'admin') {
+            alert("You do not have permission to perform this action!");
+            return;
+        }
+
+        dispatch(toggleArtistPublished(artistId));
+    };
+
 
 
     if (loading) {
@@ -108,13 +118,24 @@ const Artists = () => {
                                 >
                                     {artist.name}
                                 </Typography>
-                                {user?.role === 'admin' && (
-                                <Button
-                                    onClick={() => handleDelete(artist._id)}
-                                >
-                                    Delete
-                                </Button>
+                                <Grid display='flex' alignItems='center' gap='10px'>
+                                    {!artist.isPublished && user?.role === 'admin' && (
+                                    <Button
+                                        onClick={() => handleTogglePublish(artist._id)}
+                                        variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                    >
+                                        Publish
+                                    </Button>
                                 )}
+                                    {user?.role === 'admin' && (
+                                        <Button
+                                            variant="contained" sx={{ backgroundColor : 'black', mt: '5px'}}
+                                            onClick={() => handleDelete(artist._id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    )}
+                                </Grid>
                             </CardContent>
                         </Card>
                         </Link>
